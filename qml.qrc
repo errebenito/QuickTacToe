@@ -1,0 +1,8 @@
+<RCC>
+    <qresource prefix="/">
+        <file>main.qml</file>
+        <file>images/nought.svg</file>
+        <file>images/cross.svg</file>
+        <file>javascript/utils.js</file>
+    </qresource>
+</RCC>
