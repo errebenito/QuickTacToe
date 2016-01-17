@@ -19,7 +19,7 @@ ApplicationWindow {
             MenuItem {
                 text: qsTr("New")
                 shortcut: "Ctrl+N"
-                onTriggered: restartGame()
+                onTriggered: Utils.restartGame()
             }
             MenuItem {
                 text: qsTr("Quit")
