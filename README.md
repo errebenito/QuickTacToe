@@ -11,3 +11,7 @@ Build instructions
 5. make
 
 After that, just type *./QuickTacToe* to run the game.
+
+Changelog
+=========
+- 1.0.0 First playable version. Player vs. Player only.
