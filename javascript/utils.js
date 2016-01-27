@@ -73,8 +73,46 @@ function boardCopy(board) {
     return copy
 }
 
+function twoInColumn(player) {
+    for (var i=0; i < 3; ++i) {
+        if ((board.children[i].state === player
+             && board.children[i].state === board.children[i+3].state
+             || board.children[i].state === board.children[i+6].state)
+                || ((board.children[i+3].state === player) &&
+                    board.children[i+3].state === board.children[i+6].state
+                    )
+                ) {
+                return i
+       } else {
+            return -1
+        }
+    }
+}
+
 function move(index, player, board) {
     board.children[index].state = player
+}
+
+function randomMove(player, board) {
+    do {
+        var index = Math.floor(Math.random() * 10)
+   } while (!emptyCell(index))
+   move (index, player, board)
+}
+
+function strategicMove(player, board) {
+    if (twoInColumn(player)!==-1) {
+        for (var i=0; i < 3; ++i) {
+            if (emptyCell(board.children[i])) {
+                move(i)
+            } else if (emptyCell(board.children[i+3])) {
+                move(i+3)
+            } else {
+                move(i+6)
+            }
+        }
+    }
+    //TODO
 }
 
 function switchPlayer(board) {
