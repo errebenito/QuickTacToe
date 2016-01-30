@@ -73,20 +73,66 @@ function boardCopy(board) {
     return copy
 }
 
-function twoInColumn(player) {
-    for (var i=0; i < 3; ++i) {
-        if ((board.children[i].state === player
-             && board.children[i].state === board.children[i+3].state
-             || board.children[i].state === board.children[i+6].state)
-                || ((board.children[i+3].state === player) &&
-                    board.children[i+3].state === board.children[i+6].state
-                    )
-                ) {
-                return i
-       } else {
-            return -1
+function winOrBlock(player, board) {
+    var moved = false
+    //check columns and rows
+    for (var i=0; i < 3 && !moved; ++i) {
+        if (board.children[i].state === player) {
+            if (board.children[i].state === board.children[i+3].state) {
+                move(i+6)
+                moved = true;
+            } else if (board.children[i].state === board.children[i+6].state) {
+                move(i+3)
+                moved = true;
+            }
+        } else if (board.children[i+3].state === player && board.children[i+3].state === board.children[i+6].state) {
+            move(i)
+            moved = true;
+        }
+        if (board.children[i*3].state === board.currentPlayer) {
+            if (board.children[i*3].state === board.children[i*3+1].state) {
+                move(i*3+2)
+                moved = true;
+            } else if (board.children[i*3].state === board.children[i*3+2].state) {
+                move (i*3+1)
+                moved = true;
+            }
+        } else if (board.children[i*3+1].state === board.currentPlayer && board.children[i*3+1].state === board.children[i*3+2].state) {
+            move(i*3)
+            moved = true
         }
     }
+    //if no move was made, check a diagonal
+    if (!moved) {
+        if (board.children[0].state === player) {
+            if (board.children[0].state === board.children[4].state) {
+                move(8)
+                moved = true;
+            } else if ((board.children[0].state === board.children[8].state) || (board.children[2].state === board.children[6].state)) {
+                move(4)
+                moved = true;
+            }
+        } else if (board.children[4].state === player && board.children[4].state === board.children[8].state) {
+            move(0)
+            moved = true;
+        }
+    }
+    //if no move was made, check the other diagonal
+    if (!moved) {
+        if (board.children[2].state === player) {
+             if (board.children[2].state === board.children[4].state) {
+                 move(6)
+                 moved = true
+             } else if (board.children[2].state === board.children[6].state) {
+                 move(4)
+                 moved = true
+             }
+        } else if (board.children[4].state === player && board.children[4].state === board.children[6].state) {
+            move(2)
+            moved = true
+        }
+    }
+    return moved
 }
 
 function move(index, player, board) {
@@ -100,19 +146,9 @@ function randomMove(player, board) {
    move (index, player, board)
 }
 
-function strategicMove(player, board) {
-    if (twoInColumn(player)!==-1) {
-        for (var i=0; i < 3; ++i) {
-            if (emptyCell(board.children[i])) {
-                move(i)
-            } else if (emptyCell(board.children[i+3])) {
-                move(i+3)
-            } else {
-                move(i+6)
-            }
-        }
-    }
-    //TODO
+function reactiveMove(board) {
+    if (!winOrBlock(board.currentPlayer, board))
+        winOrBlock(board.previousPlayer, board)
 }
 
 function switchPlayer(board) {
