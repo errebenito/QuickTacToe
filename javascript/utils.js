@@ -123,9 +123,6 @@ function winOrBlock(player, board) {
              if (board.children[2].state === board.children[4].state) {
                  move(6)
                  moved = true
-             } else if (board.children[2].state === board.children[6].state) {
-                 move(4)
-                 moved = true
              }
         } else if (board.children[4].state === player && board.children[4].state === board.children[6].state) {
             move(2)
@@ -140,15 +137,19 @@ function move(index, player, board) {
 }
 
 function randomMove(player, board) {
+    var index = 0
     do {
-        var index = Math.floor(Math.random() * 10)
+         index = Math.floor(Math.random() * 10)
    } while (!emptyCell(index))
-   move (index, player, board)
+   move(index, player, board)
 }
 
-function reactiveMove(board) {
-    if (!winOrBlock(board.currentPlayer, board))
-        winOrBlock(board.previousPlayer, board)
+function reactiveMove(player, board) {
+    if (!winOrBlock(player, board)) {
+        if (!winOrBlock(board.previousPlayer, board)) {
+            randomMove(player, board)
+        }
+    }
 }
 
 function switchPlayer(board) {
