@@ -8,17 +8,31 @@
 #include <QtCore/QVariant>
 
 ConfigDialog::ConfigDialog(QWidget *parent) : QDialog(parent) {
-    QLabel *message = new QLabel(tr("Nothing to configure yet"), this);
+    difficultySlider = new QSlider(Qt::Horizontal, this);
+    difficultySlider->setTickPosition(QSlider::TicksBelow);
+    difficultySlider->setTickInterval(1);
+    difficultySlider->setSingleStep(1);
+    difficultySlider->setMinimum(1);
+    difficultySlider->setMaximum(3);
 
-    QDialogButtonBox *buttonBox = new QDialogButtonBox(QDialogButtonBox::Ok |
-                                                       QDialogButtonBox::Cancel);
+    humanButton = new QRadioButton(tr("Human"), this);
+    computerButton = new QRadioButton(tr("Computer"), this);
+    humanButton->setChecked(true);
+
+    buttonBox = new QDialogButtonBox(QDialogButtonBox::Ok | QDialogButtonBox::Cancel);
     connect(buttonBox, SIGNAL(accepted()), this, SLOT(accept()));
     connect(buttonBox, SIGNAL(rejected()), this, SLOT(reject()));
 
-    QVBoxLayout *mainLayout = new QVBoxLayout(this);
-    mainLayout->addWidget(message);
-    mainLayout->addWidget(buttonBox);
+    groupBox = new QGroupBox();
+    radioBox = new QHBoxLayout();
+    radioBox->addWidget(humanButton);
+    radioBox->addWidget(computerButton);
+    groupBox->setLayout(radioBox);
 
+    mainLayout = new QFormLayout(this);
+    mainLayout->addRow(tr("Opponent"), groupBox);
+    mainLayout->addRow(tr("Difficulty"), difficultySlider);
+    mainLayout->addWidget(buttonBox);
     setLayout(mainLayout);
 }
 

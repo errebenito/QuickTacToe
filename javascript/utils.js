@@ -147,9 +147,70 @@ function randomMove(player, board) {
 function reactiveMove(player, board) {
     if (!winOrBlock(player, board)) {
         if (!winOrBlock(board.previousPlayer, board)) {
-            randomMove(player, board)
+            if (board.children[4].state === ' ') {
+                move(4)
+            } else {
+                randomMove(player, board)
+            }
         }
     }
+}
+
+function max(board) {
+    var newBoard = boardCopy(board)
+    if (winner(newBoard)) return -1
+    if (boardFull(newBoard)) return 0
+    var n = 9
+    var current, result = 9999
+    for (var i=0;i<n;i++) {
+        if (emptyCell(i)) {
+            newBoard.children[i].state = board.currentPlayer
+            current = min(newBoard)
+            if (current > result) {
+                result = current
+            }
+            newBoard.children[i].state = ' '
+        }
+    }
+    return result
+}
+
+function min(board) {
+    var newBoard = boardCopy(board)
+    if (winner(newBoard)) return 1
+    if (boardFull(newBoard)) return 0
+    var n = 9
+    var current, result = 9999
+    for (var i=0;i<n;i++) {
+        if (emptyCell(i)) {
+            newBoard.children[i].state = board.previousPlayer
+            current = max(newBoard)
+            if (current < result) {
+                result = current
+            }
+            newBoard.children[i].state = ' '
+        }
+    }
+    return result
+}
+
+function minimaxMove(board) {
+     var newBoard = boardCopy(board)
+     var position=0
+     var n = 9
+     var current, result = -9999
+     for (var i=0;i<n;i++) {
+         if (emptyCell(i)) {
+             newBoard.children[i].state = board.currentPlayer
+             current = min(newBoard);
+             if (current > result) {
+                 result = current
+                 position = i
+             }
+             newBoard.children[i].state = ' '
+         }
+     }
+     board.children[i].state = board.currentPlayer
 }
 
 function switchPlayer(board) {

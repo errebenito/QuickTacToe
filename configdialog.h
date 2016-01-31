@@ -4,7 +4,10 @@
 #include <QtWidgets/QLabel>
 #include <QtWidgets/QSlider>
 #include <QtWidgets/QDialog>
-
+#include <QtWidgets/QDialogButtonBox>
+#include <QtWidgets/QFormLayout>
+#include <QtWidgets/QHBoxLayout>
+#include <QtWidgets/QGroupBox>
 
 class ConfigDialog : public QDialog {
     Q_OBJECT
@@ -14,7 +17,13 @@ public:
     ~ConfigDialog();
 
 private:
-    QLabel *playerLabel;
+    QRadioButton *humanButton;
+    QRadioButton *computerButton;
+    QSlider *difficultySlider;
+    QDialogButtonBox *buttonBox;
+    QFormLayout *mainLayout;
+    QGroupBox *groupBox;
+    QHBoxLayout *radioBox;
 
 public slots:
     void reject();
