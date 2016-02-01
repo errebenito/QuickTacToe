@@ -15,6 +15,8 @@ class ConfigDialog : public QDialog {
 public:
     explicit ConfigDialog(QWidget *parent = 0);
     ~ConfigDialog();
+    int getDifficulty();
+    bool isAgainstComputer();
 
 private:
     QRadioButton *humanButton;
@@ -24,6 +26,11 @@ private:
     QFormLayout *mainLayout;
     QGroupBox *groupBox;
     QHBoxLayout *radioBox;
+
+    QString m_sSettingsFile;
+
+    void loadSettings();
+    void saveSettings();
 
 public slots:
     void reject();
