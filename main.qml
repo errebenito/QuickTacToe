@@ -77,6 +77,15 @@ ApplicationWindow {
                 onClicked: {
                     if (boardGrid.gameInProgress && Utils.emptyCell(index)) {
                         Utils.move(index, boardGrid.currentPlayer, boardGrid)
+                        image.visible = true;
+                        Utils.switchPlayer(boardGrid)
+                        if (config.isAgainstComputer()) {
+                            switch (config.getDifficulty()) {
+                            case 1: Utils.randomMove(); break;
+                            case 2: Utils.reactiveMove(); break;
+                            case 3: Utils.minimaxMove(); break;
+                            }
+                        }
                         Utils.switchPlayer(boardGrid)
                         image.visible = true;
                         if (Utils.winner(boardGrid)) {

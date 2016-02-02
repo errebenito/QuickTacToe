@@ -9,10 +9,7 @@
 
 ConfigDialog::ConfigDialog(QWidget *parent) : QDialog(parent) {
 
-    m_sSettingsFile = QApplication::applicationDirPath().left(1) + ":/QuickTacToe.conf";
-
-    loadSettings();
-
+    m_sSettingsFile = QApplication::applicationDirPath() + "/QuickTacToe.conf";
     difficultySlider = new QSlider(Qt::Horizontal, this);
     difficultySlider->setTickPosition(QSlider::TicksBelow);
     difficultySlider->setTickInterval(1);
@@ -39,6 +36,8 @@ ConfigDialog::ConfigDialog(QWidget *parent) : QDialog(parent) {
     mainLayout->addRow(tr("Difficulty"), difficultySlider);
     mainLayout->addWidget(buttonBox);
     setLayout(mainLayout);
+
+    loadSettings();
 }
 
 int ConfigDialog::getDifficulty() {
