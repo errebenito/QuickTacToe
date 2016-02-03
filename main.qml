@@ -77,27 +77,31 @@ ApplicationWindow {
                 onClicked: {
                     if (boardGrid.gameInProgress && Utils.emptyCell(index)) {
                         Utils.move(index, boardGrid.currentPlayer, boardGrid)
+                        Utils.printBoard(boardGrid)
+                        image.visible = true
+                        Utils.switchPlayer(boardGrid)
+                    }
+                    if (config.isAgainstComputer() && !Utils.winner(boardGrid)) {
+                        switch (config.getDifficulty()) {
+                            case 1: Utils.randomMove(boardGrid.currentPlayer,boardGrid);
+                                break;
+                            case 2: Utils.reactiveMove(boardGrid.currentPlayer,boardGrid);
+                                break;
+                            case 3: Utils.minimaxMove(boardGrid.currentPlayer,boardGrid);
+                                break;
+                        }
+                        Utils.printBoard(boardGrid)
                         image.visible = true;
                         Utils.switchPlayer(boardGrid)
-                        if (config.isAgainstComputer()) {
-                            switch (config.getDifficulty()) {
-                            case 1: Utils.randomMove(); break;
-                            case 2: Utils.reactiveMove(); break;
-                            case 3: Utils.minimaxMove(); break;
-                            }
-                        }
-                        Utils.switchPlayer(boardGrid)
-                        image.visible = true;
-                        if (Utils.winner(boardGrid)) {
-                            boardGrid.gameInProgress = false
-                            winButton.visible = true
-                        }
-                        if (!Utils.winner(boardGrid) && Utils.boardFull(boardGrid)) {
-                            boardGrid.gameInProgress = false
-                            winButton.text = "It's a draw!\n OK"
-                            winButton.visible = true
-                        }
-                   }
+                    }
+                    if (Utils.winner(boardGrid)) {
+                        boardGrid.gameInProgress = false
+                        winButton.visible = true
+                    } else if (Utils.boardFull(boardGrid)) {
+                        boardGrid.gameInProgress = false
+                        winButton.text = "It's a draw!\n OK"
+                        winButton.visible = true
+                    }
                 }
             }
         }
@@ -119,7 +123,7 @@ ApplicationWindow {
     }
     Button {
         id: winButton
-        text: "Player "+boardGrid.previousPlayer+" wins!\n OK"
+        text: "Player "+boardGrid.currentPlayer+" wins!\n OK"
         visible: false
         onClicked: Utils.restartGame()
         anchors.centerIn: parent

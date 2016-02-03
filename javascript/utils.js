@@ -6,6 +6,12 @@ function boardFull(board) {
     return true
 }
 
+function printBoard(board) {
+    for (var i = 0; i < 9; i++) {
+        console.log("Tile "+i+" has value "+ board.children[i].state)
+    }
+}
+
 function winner(board) {
     for (var i=0; i < 3; ++i) {
         if (board.children[i].state !== ""
@@ -38,6 +44,7 @@ function restartGame() {
 }
 
 function emptyCell(index) {
+    console.log("Checking cell "+index)
     return boardGrid.children[index].state === ""
 }
 
@@ -139,9 +146,10 @@ function move(index, player, board) {
 function randomMove(player, board) {
     var index = 0
     do {
-         index = Math.floor(Math.random() * 10)
+         index = Math.floor(Math.random() * 9)
    } while (!emptyCell(index))
    move(index, player, board)
+   console.log(player + " moved randomly to " + index)
 }
 
 function reactiveMove(player, board) {
@@ -154,6 +162,7 @@ function reactiveMove(player, board) {
             }
         }
     }
+    console.log(player + " moved reactively to " + index)
 }
 
 function max(board) {
@@ -211,9 +220,11 @@ function minimaxMove(board) {
          }
      }
      board.children[i].state = board.currentPlayer
+     console.log(player + " moved minimaxly to " + index)
 }
 
 function switchPlayer(board) {
+    console.log("Old current: " + board.currentPlayer)
     if (board.currentPlayer === "X") {
         board.currentPlayer = "O"
         board.previousPlayer = "X"
@@ -221,4 +232,5 @@ function switchPlayer(board) {
         board.currentPlayer = "X"
         board.previousPlayer = "O"
     }
+    console.log("New current: " + board.currentPlayer)
 }
