@@ -16,22 +16,25 @@ function winner(board) {
     for (var i=0; i < 3; ++i) {
         if (board.children[i].state !== ""
                 && board.children[i].state === board.children[i+3].state
-                && board.children[i].state === board.children[i+6].state)
+                && board.children[i].state === board.children[i+6].state) {
             return true
-
+        }
         if (board.children[i*3].state !== ""
                 && board.children[i*3].state === board.children[i*3+1].state
-                && board.children[i*3].state === board.children[i*3+2].state)
+                && board.children[i*3].state === board.children[i*3+2].state) {
             return true
+        }
     }
     if (board.children[0].state !== ""
             && board.children[0].state === board.children[4].state
-            && board.children[0].state === board.children[8].state)
+            && board.children[0].state === board.children[8].state) {
         return true
+    }
     if (board.children[2].state !== ""
             && board.children[2].state === board.children[4].state
-            && board.children[2].state === board.children[6].state)
+            && board.children[2].state === board.children[6].state) {
         return true
+    }
 }
 
 function restartGame() {
@@ -44,7 +47,6 @@ function restartGame() {
 }
 
 function emptyCell(index) {
-    console.log("Checking cell "+index)
     return boardGrid.children[index].state === ""
 }
 
@@ -73,8 +75,9 @@ function drawBoard() {
 function boardCopy(board) {
     var copy = new Object
     copy.children = new Array(9)
-    for (var i = 0; i<9; i++) {
+    for (var i = 0; i < 9; i++) {
         copy.children[i] = new Object
+        copy.children[i].state = ""
         copy.children[i].state = board.children[i].state
     }
     return copy
@@ -86,26 +89,26 @@ function winOrBlock(player, board) {
     for (var i=0; i < 3 && !moved; ++i) {
         if (board.children[i].state === player) {
             if (board.children[i].state === board.children[i+3].state) {
-                move(i+6)
+                move(i+6, player, board)
                 moved = true;
             } else if (board.children[i].state === board.children[i+6].state) {
-                move(i+3)
+                move(i+3, player, board)
                 moved = true;
             }
         } else if (board.children[i+3].state === player && board.children[i+3].state === board.children[i+6].state) {
-            move(i)
+            move(i, player, board)
             moved = true;
         }
         if (board.children[i*3].state === board.currentPlayer) {
             if (board.children[i*3].state === board.children[i*3+1].state) {
-                move(i*3+2)
+                move(i*3+2, player, board)
                 moved = true;
             } else if (board.children[i*3].state === board.children[i*3+2].state) {
-                move (i*3+1)
+                move (i*3+1, player, board)
                 moved = true;
             }
         } else if (board.children[i*3+1].state === board.currentPlayer && board.children[i*3+1].state === board.children[i*3+2].state) {
-            move(i*3)
+            move(i*3, player, board)
             moved = true
         }
     }
@@ -113,14 +116,14 @@ function winOrBlock(player, board) {
     if (!moved) {
         if (board.children[0].state === player) {
             if (board.children[0].state === board.children[4].state) {
-                move(8)
+                move(8, player, board)
                 moved = true;
-            } else if ((board.children[0].state === board.children[8].state) || (board.children[2].state === board.children[6].state)) {
-                move(4)
+            } else if (board.children[0].state === board.children[8].state) {
+                move(4, player, board)
                 moved = true;
             }
         } else if (board.children[4].state === player && board.children[4].state === board.children[8].state) {
-            move(0)
+            move(0, player, board)
             moved = true;
         }
     }
@@ -128,11 +131,14 @@ function winOrBlock(player, board) {
     if (!moved) {
         if (board.children[2].state === player) {
              if (board.children[2].state === board.children[4].state) {
-                 move(6)
+                 move(6, player, board)
                  moved = true
+             } else if (board.children[2].state === board.children[6].state) {
+                 move(4, player, board)
+                 moved = true;
              }
         } else if (board.children[4].state === player && board.children[4].state === board.children[6].state) {
-            move(2)
+            move(2, player, board)
             moved = true
         }
     }
@@ -149,7 +155,7 @@ function randomMove(player, board) {
          index = Math.floor(Math.random() * 9)
    } while (!emptyCell(index))
    move(index, player, board)
-   console.log(player + " moved randomly to " + index)
+    console.log(player+" makes random move to: "+index)
 }
 
 function reactiveMove(player, board) {
@@ -162,7 +168,6 @@ function reactiveMove(player, board) {
             }
         }
     }
-    console.log(player + " moved reactively to " + index)
 }
 
 function max(board) {
@@ -219,12 +224,11 @@ function minimaxMove(board) {
              newBoard.children[i].state = ' '
          }
      }
-     board.children[i].state = board.currentPlayer
-     console.log(player + " moved minimaxly to " + index)
+     move(i, board.currentPlayer, board)
+     console.log(player+" makes minimax move to: "+index)
 }
 
 function switchPlayer(board) {
-    console.log("Old current: " + board.currentPlayer)
     if (board.currentPlayer === "X") {
         board.currentPlayer = "O"
         board.previousPlayer = "X"
@@ -232,5 +236,4 @@ function switchPlayer(board) {
         board.currentPlayer = "X"
         board.previousPlayer = "O"
     }
-    console.log("New current: " + board.currentPlayer)
 }

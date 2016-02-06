@@ -10,17 +10,17 @@
 ConfigDialog::ConfigDialog(QWidget *parent) : QDialog(parent) {
 
     m_sSettingsFile = QApplication::applicationDirPath() + "/QuickTacToe.conf";
-    difficultySlider = new QSlider(Qt::Horizontal, this);
-    difficultySlider->setTickPosition(QSlider::TicksBelow);
-    difficultySlider->setTickInterval(1);
-    difficultySlider->setSingleStep(1);
-    difficultySlider->setMinimum(1);
-    difficultySlider->setMaximum(3);
+    difficulty = new QComboBox(this);
+    difficulty->addItem(QString(tr("Easy")), QVariant(1));
+    difficulty->addItem(QString(tr("Medium")), QVariant(2));
+    difficulty->addItem(QString(tr("Hard")), QVariant(3));
+    difficulty->setDisabled(true);
 
     humanButton = new QRadioButton(tr("Human"), this);
     computerButton = new QRadioButton(tr("Computer"), this);
     humanButton->setChecked(true);
-
+    connect(humanButton, SIGNAL(clicked()), this, SLOT(enableCombobox()));
+    connect(computerButton, SIGNAL(clicked()), this, SLOT(enableCombobox()));
     buttonBox = new QDialogButtonBox(QDialogButtonBox::Ok | QDialogButtonBox::Cancel);
     connect(buttonBox, SIGNAL(accepted()), this, SLOT(accept()));
     connect(buttonBox, SIGNAL(rejected()), this, SLOT(reject()));
@@ -33,15 +33,26 @@ ConfigDialog::ConfigDialog(QWidget *parent) : QDialog(parent) {
 
     mainLayout = new QFormLayout(this);
     mainLayout->addRow(tr("Opponent"), groupBox);
-    mainLayout->addRow(tr("Difficulty"), difficultySlider);
+    mainLayout->addRow(tr("Difficulty"), difficulty);
+
     mainLayout->addWidget(buttonBox);
     setLayout(mainLayout);
 
     loadSettings();
 }
 
+void ConfigDialog::enableCombobox() {
+    if (humanButton->isChecked()) {
+        difficulty->setDisabled(true);
+    }
+    if (computerButton->isChecked()) {
+        difficulty->setDisabled(false);
+    }
+
+}
+
 int ConfigDialog::getDifficulty() {
-    return difficultySlider->value();
+    return difficulty->currentData().toInt();
 }
 
 bool ConfigDialog::isAgainstComputer() {
@@ -51,7 +62,7 @@ bool ConfigDialog::isAgainstComputer() {
 void ConfigDialog::loadSettings() {
     QSettings settings(m_sSettingsFile, QSettings::NativeFormat);
     computerButton->setChecked(settings.value("againstComputer").toBool());
-    difficultySlider->setValue(settings.value("difficulty").toInt());
+    difficulty->setCurrentIndex(settings.value("difficulty").toInt());
 }
 
 void ConfigDialog::saveSettings(){

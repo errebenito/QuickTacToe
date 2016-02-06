@@ -2,7 +2,7 @@
 #define CONFIGDIALOG
 #include <QtWidgets/QRadioButton>
 #include <QtWidgets/QLabel>
-#include <QtWidgets/QSlider>
+#include <QtWidgets/QComboBox>
 #include <QtWidgets/QDialog>
 #include <QtWidgets/QDialogButtonBox>
 #include <QtWidgets/QFormLayout>
@@ -17,13 +17,13 @@ public:
     ~ConfigDialog();
 
 private:
-    QRadioButton *humanButton;
-    QRadioButton *computerButton;
-    QSlider *difficultySlider;
+    QRadioButton     *humanButton;
+    QRadioButton     *computerButton;
+    QComboBox        *difficulty;
     QDialogButtonBox *buttonBox;
-    QFormLayout *mainLayout;
-    QGroupBox *groupBox;
-    QHBoxLayout *radioBox;
+    QFormLayout      *mainLayout;
+    QGroupBox        *groupBox;
+    QHBoxLayout      *radioBox;
 
     QString m_sSettingsFile;
 
@@ -33,7 +33,8 @@ public slots:
     void showDialog();
     void loadSettings();
     void saveSettings();
-    int getDifficulty();
+    int  getDifficulty();
+    void enableCombobox();
     bool isAgainstComputer();
 };
 

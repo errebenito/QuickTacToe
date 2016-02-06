@@ -75,13 +75,17 @@ ApplicationWindow {
                 anchors.fill: parent
                 cursorShape: Qt.PointingHandCursor
                 onClicked: {
+                    console.log("Image is visible: "+image.visible+" with state: "+image.state)
                     if (boardGrid.gameInProgress && Utils.emptyCell(index)) {
                         Utils.move(index, boardGrid.currentPlayer, boardGrid)
                         Utils.printBoard(boardGrid)
-                        image.visible = true
+                        image.state = boardGrid.currentPlayer
+                        image.visible = true;
                         Utils.switchPlayer(boardGrid)
+                        console.log("Image is visible: "+image.visible+" with state: "+image.state)
                     }
                     if (config.isAgainstComputer() && !Utils.winner(boardGrid)) {
+                        console.log("Difficulty: "+config.getDifficulty())
                         switch (config.getDifficulty()) {
                             case 1: Utils.randomMove(boardGrid.currentPlayer,boardGrid);
                                 break;
@@ -89,10 +93,12 @@ ApplicationWindow {
                                 break;
                             case 3: Utils.minimaxMove(boardGrid.currentPlayer,boardGrid);
                                 break;
+                            default: break;
                         }
                         Utils.printBoard(boardGrid)
+                        image.state = boardGrid.currentPlayer
                         image.visible = true;
-                        Utils.switchPlayer(boardGrid)
+                        console.log("Image is visible: "+image.visible+" with state: "+image.state)
                     }
                     if (Utils.winner(boardGrid)) {
                         boardGrid.gameInProgress = false
@@ -102,6 +108,7 @@ ApplicationWindow {
                         winButton.text = "It's a draw!\n OK"
                         winButton.visible = true
                     }
+                    Utils.switchPlayer(boardGrid)
                 }
             }
         }
