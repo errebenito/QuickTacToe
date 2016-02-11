@@ -20,7 +20,7 @@ int main(int argc, char *argv[])
     engine.rootContext()->setContextProperty("configDialog", &configDialog);
     engine.load(QUrl(QStringLiteral("qrc:/main.qml")));
     QTranslator translator;
-    translator.load("QuickTacToe_" + QLocale::system().name());
+    translator.load("quicktactoe_" + QLocale::system().name());
     app.installTranslator(&translator);
     return app.exec();
 }
