@@ -62,16 +62,14 @@ bool ConfigDialog::isAgainstComputer() {
 void ConfigDialog::loadSettings() {
     QSettings settings(m_sSettingsFile, QSettings::NativeFormat);
     computerButton->setChecked(settings.value("againstComputer").toBool());
-    difficulty->setCurrentIndex(settings.value("difficulty").toInt());
+    difficulty->setCurrentIndex(settings.value("difficulty").toInt()-1);
+    enableCombobox();
 }
 
 void ConfigDialog::saveSettings(){
-
     QSettings settings(m_sSettingsFile, QSettings::NativeFormat);
-    settings.beginGroup("QuickTacToe");
     settings.setValue("difficulty", getDifficulty());
     settings.setValue("againstComputer", isAgainstComputer());
-    settings.endGroup();
 }
 
 void ConfigDialog::accept() {

@@ -65,7 +65,6 @@ ApplicationWindow {
                 Image {
                     id: image
                     anchors.centerIn: parent
-                    visible: false
                     width: boardGrid.width/boardGrid.columns
                     height: boardGrid.height / boardGrid.rows
                 }
@@ -75,40 +74,33 @@ ApplicationWindow {
                 anchors.fill: parent
                 cursorShape: Qt.PointingHandCursor
                 onClicked: {
-                    console.log("Image is visible: "+image.visible+" with state: "+image.state)
                     if (boardGrid.gameInProgress && Utils.emptyCell(index)) {
                         Utils.move(index, boardGrid.currentPlayer, boardGrid)
                         Utils.printBoard(boardGrid)
-                        image.state = boardGrid.currentPlayer
-                        image.visible = true;
                         Utils.switchPlayer(boardGrid)
-                        console.log("Image is visible: "+image.visible+" with state: "+image.state)
-                    }
-                    if (config.isAgainstComputer() && !Utils.winner(boardGrid)) {
-                        console.log("Difficulty: "+config.getDifficulty())
-                        switch (config.getDifficulty()) {
-                            case 1: Utils.randomMove(boardGrid.currentPlayer,boardGrid);
-                                break;
-                            case 2: Utils.reactiveMove(boardGrid.currentPlayer,boardGrid);
-                                break;
-                            case 3: Utils.minimaxMove(boardGrid.currentPlayer,boardGrid);
-                                break;
-                            default: break;
+                        if (config.isAgainstComputer() && !Utils.isWinner(boardGrid,boardGrid.previousPlayer)) {
+                            switch (config.getDifficulty()) {
+                                case 1: Utils.randomMove(boardGrid.currentPlayer,boardGrid);
+                                        break;
+                                case 2: Utils.reactiveMove(boardGrid.currentPlayer,boardGrid);
+                                        break;
+                                case 3: Utils.minimaxMove(boardGrid.currentPlayer,boardGrid);
+                                        break;
+                                default: break;
+                            }
+                            Utils.printBoard(boardGrid)
                         }
                         Utils.printBoard(boardGrid)
-                        image.state = boardGrid.currentPlayer
-                        image.visible = true;
-                        console.log("Image is visible: "+image.visible+" with state: "+image.state)
+                        if (Utils.isWinner(boardGrid, boardGrid.currentPlayer)) {
+                            boardGrid.gameInProgress = false
+                            winButton.visible = true
+                        } else if (!Utils.hasEmptyCells(boardGrid)) {
+                            boardGrid.gameInProgress = false
+                            winButton.text = "It's a draw!\n OK"
+                            winButton.visible = true
+                        }
+                        Utils.switchPlayer(boardGrid)
                     }
-                    if (Utils.winner(boardGrid)) {
-                        boardGrid.gameInProgress = false
-                        winButton.visible = true
-                    } else if (Utils.boardFull(boardGrid)) {
-                        boardGrid.gameInProgress = false
-                        winButton.text = "It's a draw!\n OK"
-                        winButton.visible = true
-                    }
-                    Utils.switchPlayer(boardGrid)
                 }
             }
         }
